@@ -3,7 +3,9 @@ class ApplicationController < ActionController::API
         header = request.headers["Authorization"]
         token = header&.split(" ")&.last
 
-        decoded = JWTService.decode(token)
+        decoded = JwtService.decode(token)
+        return render json: { error: "Unauthorized" }, status: :unauthorized unless decoded
+
         @current_user = User.find(decoded["user_id"])
     rescue
         render json: { error: "Unauthorized" }, status: :unauthorized
