@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  delivery_request: one
+  event_type: MyString
+  metadata: 
+
+two:
+  delivery_request: two
+  event_type: MyString
+  metadata: 
