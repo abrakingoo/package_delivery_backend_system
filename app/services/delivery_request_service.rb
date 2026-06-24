@@ -33,6 +33,11 @@ class DeliveryRequestService
             delivery_longitude: delivery[:longitude]
         )
 
-        { success: true, request: request }
+        nearest_drivers = NearestDriverAssignmentService.call(
+            request,
+            { latitude: pickup[:latitude], longitude: pickup[:longitude] }
+        )
+
+        { success: true, request: request, nearestDrivers: nearest_drivers }
     end
 end
