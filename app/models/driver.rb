@@ -1,7 +1,10 @@
 class Driver < ApplicationRecord
   has_secure_password
+  has_one :driver_location
+
 
   before_validation :normalize_email
+  reverse_geocoded_by :latitude, :longitude
 
   validates :name, presence: true
   validates :email, presence: true, uniqueness: { case_sensitive: false }
