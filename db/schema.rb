@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_06_24_105519) do
+ActiveRecord::Schema[7.2].define(version: 2026_06_24_142608) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -61,10 +61,20 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_24_105519) do
     t.index ["driver_id"], name: "index_driver_locations_on_driver_id"
   end
 
+  create_table "driver_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "delivery_request_id", null: false
+    t.uuid "driver_id", null: false
+    t.string "status", default: "pending"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["delivery_request_id"], name: "index_driver_requests_on_delivery_request_id"
+    t.index ["driver_id"], name: "index_driver_requests_on_driver_id"
+  end
+
   create_table "drivers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.string "phone"
-    t.boolean "available"
+    t.boolean "available", default: true
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "email"
@@ -85,4 +95,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_24_105519) do
   add_foreign_key "delivery_requests", "drivers"
   add_foreign_key "delivery_requests", "users"
   add_foreign_key "driver_locations", "drivers"
+  add_foreign_key "driver_requests", "delivery_requests"
+  add_foreign_key "driver_requests", "drivers"
 end

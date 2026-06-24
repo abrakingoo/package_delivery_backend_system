@@ -10,6 +10,7 @@ Rails.application.routes.draw do
 
   post :delivery_request, to: "delivery_request#create"
   patch "driver/location", to: "driver_location#update"
+  patch "driver/requests/:id/respond", to: "driver_requests#respond"
 
   namespace :auth do
     post :login, to: "sessions#create"
