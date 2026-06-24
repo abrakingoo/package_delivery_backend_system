@@ -1,17 +1,21 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+pending_address:
+  delivery_request: pending_delivery
+  pickup_street: Kenyatta Avenue
+  pickup_city: Nairobi
+  pickup_latitude: -1.2921
+  pickup_longitude: 36.8219
+  delivery_street: Moi Avenue
+  delivery_city: Nairobi
+  delivery_latitude: -1.2864
+  delivery_longitude: 36.8173
 
-one:
-  delivery_request: one
-  address_type: MyString
-  street: MyString
-  city: MyString
-  latitude: 1.5
-  longitude: 1.5
-
-two:
-  delivery_request: two
-  address_type: MyString
-  street: MyString
-  city: MyString
-  latitude: 1.5
-  longitude: 1.5
+assigned_address:
+  delivery_request: assigned_delivery
+  pickup_street: Tom Mboya Street
+  pickup_city: Nairobi
+  pickup_latitude: -1.2876
+  pickup_longitude: 36.8237
+  delivery_street: Ngong Road
+  delivery_city: Nairobi
+  delivery_latitude: -1.3006
+  delivery_longitude: 36.7819
