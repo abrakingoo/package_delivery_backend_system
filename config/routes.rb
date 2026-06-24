@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 
   get  "deliveries",            to: "deliveries#index"
   get  "deliveries/:id",        to: "deliveries#show"
+  get  "deliveries/:id/events",  to: "deliveries#events"
   patch "deliveries/:id/status", to: "deliveries#update_status"
 
   namespace :auth do
