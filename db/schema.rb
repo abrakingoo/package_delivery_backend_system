@@ -10,19 +10,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_06_24_022128) do
+ActiveRecord::Schema[7.2].define(version: 2026_06_24_100903) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "addresses", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "delivery_request_id", null: false
-    t.string "address_type"
-    t.string "street"
-    t.string "city"
-    t.float "latitude"
-    t.float "longitude"
+    t.string "pickup_street"
+    t.string "pickup_city"
+    t.float "pickup_latitude"
+    t.float "pickup_longitude"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "delivery_street"
+    t.string "delivery_city"
+    t.float "delivery_latitude"
+    t.float "delivery_longitude"
     t.index ["delivery_request_id"], name: "index_addresses_on_delivery_request_id"
   end
 
@@ -37,13 +40,15 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_24_022128) do
 
   create_table "delivery_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
-    t.uuid "driver_id", null: false
+    t.uuid "driver_id"
     t.string "package_description"
     t.decimal "weight"
-    t.integer "status"
+    t.string "status", default: "assigned"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "idempotency_key"
     t.index ["driver_id"], name: "index_delivery_requests_on_driver_id"
+    t.index ["idempotency_key"], name: "index_delivery_requests_on_idempotency_key", unique: true
     t.index ["user_id"], name: "index_delivery_requests_on_user_id"
   end
 
