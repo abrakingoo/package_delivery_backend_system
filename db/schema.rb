@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_06_24_091441) do
+ActiveRecord::Schema[7.2].define(version: 2026_06_24_100903) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -46,7 +46,9 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_24_091441) do
     t.string "status", default: "assigned"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "idempotency_key"
     t.index ["driver_id"], name: "index_delivery_requests_on_driver_id"
+    t.index ["idempotency_key"], name: "index_delivery_requests_on_idempotency_key", unique: true
     t.index ["user_id"], name: "index_delivery_requests_on_user_id"
   end
 
