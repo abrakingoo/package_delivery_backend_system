@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   # root "home#index"
 
   post :delivery_request, to: "delivery_request#create"
+  patch "driver/location", to: "driver_location#update"
 
   namespace :auth do
     post :login, to: "sessions#create"
