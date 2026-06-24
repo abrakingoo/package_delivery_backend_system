@@ -6,7 +6,11 @@ class ApplicationController < ActionController::API
         decoded = JwtService.decode(token)
         return render json: { error: "Unauthorized" }, status: :unauthorized unless decoded
 
-        @current_user = User.find(decoded["user_id"])
+        @current_user = if decoded["role"] == "driver"
+          Driver.find(decoded["user_id"])
+        else
+          User.find(decoded["user_id"])
+        end
     rescue
         render json: { error: "Unauthorized" }, status: :unauthorized
     end
