@@ -1,6 +1,6 @@
 class DeliveriesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_delivery, only: [ :show, :update_status ]
+  before_action :set_delivery, only: [ :show, :update_status, :events ]
 
   def index
     return render json: { error: "Forbidden" }, status: :forbidden unless @current_user.is_a?(User)
@@ -20,6 +20,12 @@ class DeliveriesController < ApplicationController
       driver: @delivery.driver&.slice(:id, :name, :phone),
       next_status: @delivery.next_status
     }
+  end
+
+  def events
+    return render json: { error: "Forbidden" }, status: :forbidden unless @delivery.user_id == @current_user.id || @delivery.driver_id == @current_user.id
+
+    render json: @delivery.delivery_events.order(created_at: :asc).select(:id, :event_type, :created_at)
   end
 
   def update_status
