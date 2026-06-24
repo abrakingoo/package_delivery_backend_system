@@ -7,7 +7,7 @@ class AuthenticationService
     user = User.find_by(email: email)
 
     if user&.authenticate(password)
-      token = JWTService.encode(user_id: user.id)
+      token = JwtService.encode(user_id: user.id)
 
       { success: true, token: token, user: {
         id: user.id,
