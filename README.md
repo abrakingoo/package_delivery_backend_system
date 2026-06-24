@@ -210,10 +210,12 @@ The application follows a service object pattern — controllers are kept thin a
 ```
 app/
 ├── controllers/        # Thin controllers, handle HTTP in/out only
+├── jobs/
+│   └── GeocodeAndAssignDriverJob     # Async geocoding and driver assignment
 ├── services/           # Business logic
 │   ├── AuthenticationService         # JWT login
 │   ├── RegistrationService           # User/Driver registration
-│   ├── DeliveryRequestService        # Create delivery + geocode addresses
+│   ├── DeliveryRequestService        # Create delivery + enqueue background job
 │   ├── NearestDriverAssignmentService # Find and notify nearby drivers
 │   ├── DriverRequestResponseService  # Accept/reject driver requests
 │   ├── DeliveryStatusUpdateService   # Enforce lifecycle transitions
@@ -232,7 +234,7 @@ app/
 
 **Key flows:**
 
-1. User creates delivery → addresses are geocoded → `NearestDriverAssignmentService` finds up to 10 drivers within 10km and creates a `DriverRequest` for each
+1. User creates delivery → `DeliveryRequestService` persists the record and immediately returns it → `GeocodeAndAssignDriverJob` runs in the background to geocode addresses and find nearby drivers
 2. Driver accepts via `DriverRequestResponseService` → delivery marked `assigned`, other pending requests deleted, driver marked unavailable
 3. Driver advances status via `DeliveryStatusUpdateService` → transition validated, `DeliveryEvent` logged, driver marked available on delivery
 
@@ -240,6 +242,7 @@ app/
 
 ## Assumptions
 
+- **Background jobs** — geocoding and driver assignment run asynchronously via `GeocodeAndAssignDriverJob`. Rails uses the async adapter by default (in-process threads). In production, swap to Sidekiq or GoodJob with Redis for reliability.
 - **No push notifications** — in production, drivers would be notified via push/websocket when a `DriverRequest` is created. Currently simulated by polling or direct API calls.
 - **Single driver per delivery** — the first driver to accept wins; all other pending requests are deleted.
 - **Geocoding via Nominatim** — the free OpenStreetMap geocoder is used. In production, consider Google Maps or a paid provider for reliability.
