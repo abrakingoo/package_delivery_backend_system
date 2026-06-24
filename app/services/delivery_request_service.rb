@@ -1,6 +1,5 @@
 class DeliveryRequestService
     def self.call(params, user_id)
-
         pickup_addr = params[:pick_up_address]
         pickup_address = "#{pickup_addr[:street]}, #{pickup_addr[:city]}, #{pickup_addr[:country]}"
         pickup = GeocodingService.coordinates_for(pickup_address)
@@ -30,6 +29,6 @@ class DeliveryRequestService
             delivery_longitude: delivery[:longitude]
         )
 
-        return { success: true, request: request }
+        { success: true, request: request }
     end
 end

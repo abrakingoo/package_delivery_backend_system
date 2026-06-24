@@ -10,7 +10,7 @@ class ApplicationController < ActionController::API
     rescue
         render json: { error: "Unauthorized" }, status: :unauthorized
     end
-    
+
     rescue_from ActiveRecord::RecordNotFound do
         render json: { error: "Not found" }, status: :not_found
     end
