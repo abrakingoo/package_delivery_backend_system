@@ -1,6 +1,5 @@
 class DeliveryRequestService
     def self.call(params, user_id, idempotency_key)
-
         existing = DeliveryRequest.find_by(idempotency_key: idempotency_key)
         return { success: true, request: existing } if existing
 
