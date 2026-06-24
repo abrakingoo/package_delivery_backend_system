@@ -12,6 +12,10 @@ Rails.application.routes.draw do
   patch "driver/location", to: "driver_location#update"
   patch "driver/requests/:id/respond", to: "driver_requests#respond"
 
+  get  "deliveries",            to: "deliveries#index"
+  get  "deliveries/:id",        to: "deliveries#show"
+  patch "deliveries/:id/status", to: "deliveries#update_status"
+
   namespace :auth do
     post :login, to: "sessions#create"
     post :register, to: "registrations#create"
