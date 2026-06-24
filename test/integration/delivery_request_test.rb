@@ -18,7 +18,7 @@ class DeliveryRequestTest < ActionDispatch::IntegrationTest
   test "creates delivery request successfully" do
     post delivery_request_path, params: @valid_params, headers: @headers, as: :json
     assert_response :created
-    assert json_response["response"].present?
+    assert json_response["request"].present?
   end
 
   test "returns existing request on duplicate idempotency key" do
@@ -28,7 +28,7 @@ class DeliveryRequestTest < ActionDispatch::IntegrationTest
     post delivery_request_path, params: @valid_params, headers: headers, as: :json
 
     assert_response :created
-    assert_equal existing.id, json_response["response"]["id"]
+    assert_equal existing.id, json_response["request"]["id"]
   end
 
   test "fails without idempotency key" do
