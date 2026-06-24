@@ -1,19 +1,21 @@
 class DeliveryRequestController < ApplicationController
+    before_action :authenticate_user!
     before_action :validate_request_params, only: [:create]
 
     def create
-        results = DeliveryRequestService.call(request_params)
-        unless results[:success]
-            render json: { Response_body: results }
+        results = DeliveryRequestService.call(request_params, @current_user.id)
+        if results[:success]
+            render json: { response: results[:request] }, status: :created
         else
-            render json: { Response_body: results.error }
+            render json: { error: results[:error] }, status: :unprocessable_entity
         end
     end
 
     private
 
     def request_params
-        params.require(:delivery_request).permit(:pick_up_address, :delivery_address, :description, :weight)
+        params.require(:delivery_request).permit(:description, :weight,pick_up_address: [:street, :city, :country],
+    delivery_address: [:street, :city, :country])
     end
 
     def validate_request_params
