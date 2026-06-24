@@ -5,7 +5,7 @@ class DeliveriesController < ApplicationController
   def index
     return render json: { error: "Forbidden" }, status: :forbidden unless @current_user.is_a?(User)
 
-    deliveries = DeliveryRequest.where(user_id: @current_user.id)
+    deliveries = DeliveryRequest.where(user_id: @current_user.id).includes(:driver)
     render json: deliveries
   end
 
@@ -15,7 +15,7 @@ class DeliveriesController < ApplicationController
     render json: {
       id: @delivery.id,
       status: @delivery.status,
-      package_description: @delivery.package_description,
+      description: @delivery.description,
       weight: @delivery.weight,
       driver: @delivery.driver&.slice(:id, :name, :phone),
       next_status: @delivery.next_status
@@ -43,6 +43,6 @@ class DeliveriesController < ApplicationController
   private
 
   def set_delivery
-    @delivery = DeliveryRequest.find(params[:id])
+    @delivery = DeliveryRequest.includes(:driver, :delivery_events).find(params[:id])
   end
 end

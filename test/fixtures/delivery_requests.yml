@@ -1,6 +1,6 @@
 pending_delivery:
   user: john
-  package_description: Laptop
+  description: Laptop
   weight: 2.5
   status: pending
   idempotency_key: key-001
@@ -8,7 +8,7 @@ pending_delivery:
 assigned_delivery:
   user: john
   driver: james
-  package_description: Books
+  description: Books
   weight: 1.0
   status: assigned
   idempotency_key: key-002

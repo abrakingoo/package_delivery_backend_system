@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_06_24_164205) do
+ActiveRecord::Schema[7.2].define(version: 2026_06_24_204925) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -34,13 +34,14 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_24_164205) do
     t.string "event_type"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_delivery_events_on_created_at"
     t.index ["delivery_request_id"], name: "index_delivery_events_on_delivery_request_id"
   end
 
   create_table "delivery_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "driver_id"
-    t.string "package_description"
+    t.string "description"
     t.decimal "weight"
     t.string "status", default: "pending"
     t.datetime "created_at", null: false
@@ -48,6 +49,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_24_164205) do
     t.string "idempotency_key"
     t.index ["driver_id"], name: "index_delivery_requests_on_driver_id"
     t.index ["idempotency_key"], name: "index_delivery_requests_on_idempotency_key", unique: true
+    t.index ["status"], name: "index_delivery_requests_on_status"
     t.index ["user_id"], name: "index_delivery_requests_on_user_id"
   end
 
@@ -58,6 +60,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_24_164205) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["driver_id"], name: "index_driver_locations_on_driver_id"
+    t.index ["latitude", "longitude"], name: "index_driver_locations_on_latitude_and_longitude"
   end
 
   create_table "driver_requests", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -78,6 +81,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_24_164205) do
     t.datetime "updated_at", null: false
     t.string "email"
     t.string "password_digest"
+    t.index ["available"], name: "index_drivers_on_available"
     t.index ["email"], name: "index_drivers_on_email", unique: true
   end
 
