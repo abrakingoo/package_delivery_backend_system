@@ -1,5 +1,23 @@
 class DeliveryRequestService
     def self.call(params, user_id)
+
+        duplicate = DeliveryRequest.where(
+        user_id: user_id,
+        package_description: params[:description],
+        weight: params[:weight]
+        ).where(
+        created_at: 5.minutes.ago..Time.current
+        ).first
+
+
+        if duplicate
+            return {
+                success: false,
+                error: "You already have an active delivery request",
+                current_request_status: duplicate.status
+            }
+        end
+
         pickup_addr = params[:pick_up_address]
         pickup_address = "#{pickup_addr[:street]}, #{pickup_addr[:city]}, #{pickup_addr[:country]}"
         pickup = GeocodingService.coordinates_for(pickup_address)
