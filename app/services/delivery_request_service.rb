@@ -17,7 +17,7 @@ class DeliveryRequestService
             user_id: user_id,
             idempotency_key: idempotency_key,
             status: "pending",
-            package_description: params[:description],
+            description: params[:description],
             weight: params[:weight]
         )
 

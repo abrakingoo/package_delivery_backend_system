@@ -15,7 +15,7 @@ class DeliveriesController < ApplicationController
     render json: {
       id: @delivery.id,
       status: @delivery.status,
-      package_description: @delivery.package_description,
+      description: @delivery.description,
       weight: @delivery.weight,
       driver: @delivery.driver&.slice(:id, :name, :phone),
       next_status: @delivery.next_status
