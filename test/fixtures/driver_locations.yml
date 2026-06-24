@@ -1,11 +1,9 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+james_location:
+  driver: james
+  latitude: -1.2921
+  longitude: 36.8219
 
-one:
-  driver: one
-  latitude: 1.5
-  longitude: 1.5
-
-two:
-  driver: two
-  latitude: 1.5
-  longitude: 1.5
+grace_location:
+  driver: grace
+  latitude: -1.2833
+  longitude: 36.8167

@@ -7,10 +7,12 @@ class ApplicationController < ActionController::API
         return render json: { error: "Unauthorized" }, status: :unauthorized unless decoded
 
         @current_user = if decoded["role"] == "driver"
-          Driver.find(decoded["user_id"])
+          Driver.find_by(id: decoded["user_id"])
         else
-          User.find(decoded["user_id"])
+          User.find_by(id: decoded["user_id"])
         end
+
+        render json: { error: "Unauthorized" }, status: :unauthorized unless @current_user
     rescue
         render json: { error: "Unauthorized" }, status: :unauthorized
     end

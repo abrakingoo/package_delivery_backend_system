@@ -3,7 +3,7 @@ class DriverRequestsController < ApplicationController
   before_action :require_driver!
 
   def respond
-    driver_request = DriverRequest.find_by(driver_id: params[:id], driver: @current_user)
+    driver_request = DriverRequest.find_by(id: params[:id], driver: @current_user)
     return render json: { error: "Not found" }, status: :not_found unless driver_request
 
     result = DriverRequestResponseService.call(driver_request, params[:response_action])

@@ -1,15 +1,14 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+pending_delivery:
+  user: john
+  package_description: Laptop
+  weight: 2.5
+  status: pending
+  idempotency_key: key-001
 
-one:
-  user: one
-  driver: one
-  package_description: MyString
-  weight: 9.99
-  status: 1
-
-two:
-  user: two
-  driver: two
-  package_description: MyString
-  weight: 9.99
-  status: 1
+assigned_delivery:
+  user: john
+  driver: james
+  package_description: Books
+  weight: 1.0
+  status: assigned
+  idempotency_key: key-002
