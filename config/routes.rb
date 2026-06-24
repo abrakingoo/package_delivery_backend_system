@@ -11,12 +11,10 @@ Rails.application.routes.draw do
   post :delivery_request, to: "delivery_request#create"
   patch "driver/location", to: "driver_location#update"
   patch "driver/requests/:id/respond", to: "driver_requests#respond", as: :driver_requests_respond
-
   get   "deliveries",            to: "deliveries#index",         as: :deliveries
   get   "deliveries/:id",        to: "deliveries#show",          as: :delivery
   get   "deliveries/:id/events", to: "deliveries#events",        as: :delivery_events
   patch "deliveries/:id/status", to: "deliveries#update_status", as: :deliveries_update_status
-
   namespace :auth do
     post :login, to: "sessions#create"
     post :register, to: "registrations#create"
