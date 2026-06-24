@@ -55,11 +55,14 @@ The API will be available at `http://localhost:3000`.
 
 ## Running Tests
 
+```bash
+rails test
+```
 
 Tests are organized into:
-- `rails test test/integration/` — request specs for all endpoints
-- `rails test test/services/` — unit specs for business logic services
-- `rails test test/models/` — model validation specs
+- `test/models/` — model validation specs
+- `test/integration/` — request specs for all endpoints
+- `test/services/` — unit specs for business logic services
 
 ---
 
@@ -67,7 +70,7 @@ Tests are organized into:
 
 All protected endpoints require token sent in the header:
 ```
-Authorization: <token>
+Authorization: Bearer <token>
 ```
 
 ### Authentication
