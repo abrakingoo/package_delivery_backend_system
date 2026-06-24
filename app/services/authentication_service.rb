@@ -4,16 +4,14 @@ class AuthenticationService
 
     email = params[:email].to_s.strip.downcase
     password = params[:password].to_s
-    user = User.find_by(email: email)
 
-    if user&.authenticate(password)
-      token = JWTService.encode(user_id: user.id)
+    actor = User.find_by(email: email) || Driver.find_by(email: email)
 
-      { success: true, token: token, user: {
-        id: user.id,
-        name: user.name,
-        email: user.email
-      } }
+    if actor&.authenticate(password)
+      role = actor.is_a?(Driver) ? "driver" : "client"
+      token = JwtService.encode(user_id: actor.id, role: role)
+
+      { success: true, token: token, user: { id: actor.id, name: actor.name, email: actor.email, role: role } }
     else
       { success: false, error: "Invalid email or password" }
     end

@@ -1,4 +1,4 @@
-class JWTService
+class JwtService
   SECRET = Rails.application.secret_key_base
   EXPIRY = 24.hours
 
