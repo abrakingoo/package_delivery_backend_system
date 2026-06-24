@@ -7,7 +7,7 @@ class DeliveryRequestController < ApplicationController
         if results[:success]
             render json: { response: results[:request] }, status: :created
         else
-            render json: { error: results[:error] }, status: :unprocessable_entity
+            render json: { error: results[:error], current_request_status: results[:current_request_status] }, status: :unprocessable_entity
         end
     end
 
