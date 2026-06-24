@@ -4,7 +4,8 @@ class Auth::RegistrationsController < ApplicationController
             render json: { error: "Password and password confirmation don't match" }
         end
 
-        result = RegistrationService.call(user_params)
+        role = params.dig(:user, :role) || "client"
+        result = RegistrationService.call(user_params, role)
 
         if result[:success]
             render json: {
@@ -20,6 +21,6 @@ class Auth::RegistrationsController < ApplicationController
 
     private
     def user_params
-        params.require(:user).permit(:name, :email, :password, :password_confirmation)
+        params.require(:user).permit(:name, :email, :phone, :available, :role, :password, :password_confirmation)
     end
 end
