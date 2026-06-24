@@ -7,7 +7,7 @@ class DeliveryRequestController < ApplicationController
         return render json: { error: "Idempotency-Key header is required" }, status: :bad_request if idempotency_key.blank?
         results = DeliveryRequestService.call(request_params, @current_user.id, idempotency_key)
         if results[:success]
-            render json: { response: results[:request] }, status: :created
+            render json: { response: results[:request], nearestDrivers:results[:nearestDrivers] }, status: :created
         else
             render json: { error: results[:error], current_request_status: results[:current_request_status] }, status: :unprocessable_entity
         end
