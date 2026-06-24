@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_06_24_142608) do
+ActiveRecord::Schema[7.2].define(version: 2026_06_24_164205) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -32,7 +32,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_24_142608) do
   create_table "delivery_events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "delivery_request_id", null: false
     t.string "event_type"
-    t.jsonb "metadata"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["delivery_request_id"], name: "index_delivery_events_on_delivery_request_id"
@@ -43,7 +42,7 @@ ActiveRecord::Schema[7.2].define(version: 2026_06_24_142608) do
     t.uuid "driver_id"
     t.string "package_description"
     t.decimal "weight"
-    t.string "status", default: "assigned"
+    t.string "status", default: "pending"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "idempotency_key"
