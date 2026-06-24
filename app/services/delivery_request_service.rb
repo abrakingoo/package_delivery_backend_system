@@ -16,7 +16,7 @@ class DeliveryRequestService
         request = DeliveryRequest.create!(
             user_id: user_id,
             idempotency_key: idempotency_key,
-            status: "requested",
+            status: "pending",
             package_description: params[:description],
             weight: params[:weight]
         )
