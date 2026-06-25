@@ -1,6 +1,14 @@
 # Package Delivery Backend
 
 A Rails API-only backend for a package delivery platform. It handles user and driver registration, delivery request creation, nearest driver assignment, delivery lifecycle management, and event tracking.
+<img width="1916" height="1054" alt="driver_updates_status" src="https://github.com/user-attachments/assets/b6289e58-09e9-4bc5-8568-7df2a13b5861" />
+<img width="1916" height="1054" alt="driver_login" src="https://github.com/user-attachments/assets/e665bc4f-f532-4500-92d8-f039225abc35" />
+<img width="1916" height="1054" alt="driver_accepts_request" src="https://github.com/user-attachments/assets/d14db57f-72a1-4ed1-b53c-d08cbc6ffcf3" />
+<img width="1916" height="1054" alt="delivery_request_headers" src="https://github.com/user-attachments/assets/47eb6d9f-33ee-456d-8b4e-f139cf0b5d36" />
+<img width="1916" height="1054" alt="delivery_request_body" src="https://github.com/user-attachments/assets/6ea5b008-4c57-4897-acf6-2e6fea25d40f" />
+<img width="1916" height="1054" alt="client_views_entire_events_history" src="https://github.com/user-attachments/assets/4c88facb-d1e5-42a9-bdc9-0f47f48ba911" />
+<img width="1916" height="1054" alt="client_tracks_product" src="https://github.com/user-attachments/assets/823e4275-2fe9-4f73-8454-46ecefbf488a" />
+
 
 ---
 
