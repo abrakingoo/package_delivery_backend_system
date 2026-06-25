@@ -14,3 +14,7 @@ module ActiveSupport
     setup { Rack::Attack.enabled = false }
   end
 end
+
+class ActionDispatch::IntegrationTest
+  parallelize(workers: 1)
+end
