@@ -11,7 +11,7 @@ class DriverAssignmentTest < ActionDispatch::IntegrationTest
   end
 
   test "driver accepts a delivery request" do
-    patch driver_requests_respond_path(@driver_request.id), params: { response_action: "accept" },
+    patch driver_requests_respond_path(@delivery.id), params: { response_action: "accept" },
       headers: @headers, as: :json
 
     assert_response :ok
@@ -21,7 +21,7 @@ class DriverAssignmentTest < ActionDispatch::IntegrationTest
   end
 
   test "driver rejects a delivery request" do
-    patch driver_requests_respond_path(@driver_request.id), params: { response_action: "reject" },
+    patch driver_requests_respond_path(@delivery.id), params: { response_action: "reject" },
       headers: @headers, as: :json
 
     assert_response :ok
@@ -31,7 +31,7 @@ class DriverAssignmentTest < ActionDispatch::IntegrationTest
   test "driver cannot respond twice to same request" do
     @driver_request.update!(status: "accepted")
 
-    patch driver_requests_respond_path(@driver_request.id), params: { response_action: "accept" },
+    patch driver_requests_respond_path(@delivery.id), params: { response_action: "accept" },
       headers: @headers, as: :json
 
     assert_response :unprocessable_entity

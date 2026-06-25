@@ -13,7 +13,41 @@ A Rails API-only backend for a package delivery platform. It handles user and dr
 
 ---
 
-## Setup
+## Quick Start (Docker)
+
+The fastest way to run the app — only requires Docker.
+
+**1. Clone the repository**
+```bash
+git clone https://github.com/abrakingoo/package_delivery_backend_system.git
+cd package_delivery_backend_system
+```
+
+**2. Set your Rails master key**
+```bash
+export RAILS_MASTER_KEY=$(cat config/master.key)
+```
+
+**3. Start the app**
+```bash
+docker compose up --build
+```
+
+This will:
+- Start a PostgreSQL database
+- Run migrations and seed 10 drivers around Nairobi
+- Start the Rails server on `http://localhost:3000`
+
+**4. Test it**
+```bash
+curl http://localhost:3000/up
+```
+
+> Use [Postman](https://www.postman.com) or curl to interact with the API. See [API Endpoints](#api-endpoints) below.
+
+---
+
+## Manual Setup
 
 **1. Clone the repository**
 ```bash
