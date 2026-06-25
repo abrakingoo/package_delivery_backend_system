@@ -17,6 +17,7 @@ services:
       RAILS_ENV: development
       DATABASE_URL: postgres://postgres:password@db:5432/package_delivery_backend_development
       RAILS_MASTER_KEY: ${RAILS_MASTER_KEY}
+      BUNDLE_WITHOUT: ""
     ports:
       - "3000:3000"
     depends_on:
