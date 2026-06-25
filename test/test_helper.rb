@@ -10,6 +10,7 @@ module ActiveSupport
     # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
     fixtures :all
 
-    # Add more helper methods to be used by all tests here...
+    # Disable Rack::Attack by default so throttling doesn't interfere with other tests
+    setup { Rack::Attack.enabled = false }
   end
 end
