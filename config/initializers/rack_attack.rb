@@ -25,5 +25,5 @@ Rack::Attack.throttle("driver/location/ip", limit: 60, period: 1.minute) do |req
 end
 
 Rack::Attack.throttled_responder = lambda do |_req|
-  [429, { "Content-Type" => "application/json" }, [{ error: "Too many requests. Please try again later." }.to_json]]
+  [ 429, { "Content-Type" => "application/json" }, [ { error: "Too many requests. Please try again later." }.to_json ] ]
 end
