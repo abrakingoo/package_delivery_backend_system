@@ -18,6 +18,7 @@ gem "puma", ">= 5.0"
 gem "bcrypt", "~> 3.1.7"
 gem "jwt"
 gem "geocoder"
+gem "rack-attack"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]

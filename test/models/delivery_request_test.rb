@@ -1,6 +1,6 @@
 require "test_helper"
 
-class DeliveryRequestTest < ActiveSupport::TestCase
+class DeliveryRequestModelTest < ActiveSupport::TestCase
   test "is valid with a valid status" do
     assert delivery_requests(:pending_delivery).valid?
   end

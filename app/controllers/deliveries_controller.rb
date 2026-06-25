@@ -43,6 +43,10 @@ class DeliveriesController < ApplicationController
   private
 
   def set_delivery
-    @delivery = DeliveryRequest.includes(:driver, :delivery_events).find(params[:id])
+    @delivery = if @current_user.is_a?(Driver)
+      DeliveryRequest.includes(:driver, :delivery_events).find_by!(id: params[:id], driver_id: @current_user.id)
+    else
+      DeliveryRequest.includes(:driver, :delivery_events).find_by!(id: params[:id], user_id: @current_user.id)
+    end
   end
 end
