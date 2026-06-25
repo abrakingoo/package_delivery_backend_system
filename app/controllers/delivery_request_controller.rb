@@ -1,5 +1,6 @@
 class DeliveryRequestController < ApplicationController
     before_action :authenticate_user!
+    before_action :require_client!
     before_action :validate_request_params, only: [ :create ]
 
     def create
@@ -25,5 +26,9 @@ class DeliveryRequestController < ApplicationController
         missing = required.select { |f| request_params[f].blank? }
         render json: { error: "Missing required fields: #{missing.join(', ')}" }, status: :unprocessable_entity if missing.any?
         nil
+    end
+
+    def require_client!
+      render json: { error: "Forbidden" }, status: :forbidden unless @current_user.is_a?(User)
     end
 end
