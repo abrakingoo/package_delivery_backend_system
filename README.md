@@ -19,8 +19,8 @@ The fastest way to run the app — only requires Docker.
 
 **1. Clone the repository**
 ```bash
-git clone <repo-url>
-cd package-delivery-backend
+git clone https://github.com/abrakingoo/package_delivery_backend_system.git
+cd package_delivery_backend_system
 ```
 
 **2. Set your Rails master key**
