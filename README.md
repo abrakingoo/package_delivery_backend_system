@@ -33,6 +33,12 @@ Copy and update database credentials:
 cp config/database.yml.example config/database.yml
 ```
 
+If you're using a local PostgreSQL installation that requires authentication, uncomment and update the `username`, `password`, `host`, and `port` fields in `config/database.yml`.
+
+For default PostgreSQL setups (like Homebrew on macOS or pg_hba.conf trust mode on Linux), the defaults work without changes.
+
+> **JWT Secret:** The JWT token secret is automatically derived from `Rails.application.secret_key_base` (stored in `config/credentials.yml.enc`). Rails generates this automatically on setup — no manual configuration needed.
+
 **4. Create and migrate the database**
 ```bash
 rails db:create db:migrate
@@ -43,6 +49,8 @@ rails db:create db:migrate
 rails db:seed
 ```
 This creates 10 available drivers positioned around Nairobi, Kenya.
+
+> All seeded drivers use the password `password123`. You can log in as any of them using their email (e.g. `james@driver.com`).
 
 **6. Start the server**
 ```bash
@@ -55,6 +63,99 @@ The API will be available at `http://localhost:3000`.
 > - [Postman](https://www.postman.com)
 > - [Insomnia](https://insomnia.rest)
 > - [curl](https://curl.se)
+
+---
+
+## Quick Start: End-to-End Example
+
+Here's a complete flow using curl to test the system in under 5 minutes:
+
+**1. Register a user**
+```bash
+curl -X POST http://localhost:3000/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "user": {
+      "name": "John Doe",
+      "email": "john@example.com",
+      "password": "password123",
+      "password_confirmation": "password123",
+      "role": "client"
+    }
+  }'
+```
+
+**2. Login and save the token**
+```bash
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "user": {
+      "email": "john@example.com",
+      "password": "password123"
+    }
+  }'
+# Copy the token from the response
+```
+
+**3. Create a delivery request**
+```bash
+curl -X POST http://localhost:3000/delivery_request \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE" \
+  -H "Idempotency-Key: $(uuidgen)" \
+  -d '{
+    "delivery_request": {
+      "description": "Laptop",
+      "weight": 2.5,
+      "pick_up_address": {
+        "street": "Kenyatta Avenue",
+        "city": "Nairobi",
+        "country": "Kenya"
+      },
+      "delivery_address": {
+        "street": "Moi Avenue",
+        "city": "Nairobi",
+        "country": "Kenya"
+      }
+    }
+  }'
+# Note the delivery_request id from the response
+```
+
+**4. Check delivery status**
+```bash
+curl -X GET http://localhost:3000/deliveries/1 \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"
+```
+
+**5. Login as a driver and accept the delivery**
+```bash
+# Login as seeded driver
+curl -X POST http://localhost:3000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "user": {
+      "email": "james@driver.com",
+      "password": "password123"
+    }
+  }'
+# Copy the driver token
+
+# Accept the driver request (use the driver_request id from step 3 response)
+curl -X PATCH http://localhost:3000/driver/requests/1/respond \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer DRIVER_TOKEN_HERE" \
+  -d '{"response_action": "accept"}'
+
+# Update delivery status
+curl -X PATCH http://localhost:3000/deliveries/1/status \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer DRIVER_TOKEN_HERE" \
+  -d '{"status": "picked_up"}'
+```
+
+**✓ You've tested the core flow.** See the full API reference below for all endpoints, or jump to [Delivery Lifecycle](#delivery-lifecycle) to understand status transitions.
 
 ---
 
@@ -169,6 +270,10 @@ Idempotency-Key: <unique-key>
   }
 }
 ```
+
+> **Note:** The `Idempotency-Key` header is required to prevent duplicate deliveries from retries. Use a UUID (e.g. `uuidgen` on macOS/Linux or any UUID generator).
+
+> **Note:** This endpoint geocodes addresses using Nominatim in real-time, which may take 2-5 seconds. If the request appears to hang, the geocoding service may be slow or unavailable.
 
 ---
 

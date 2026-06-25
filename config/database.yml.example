@@ -1,0 +1,22 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: package_delivery_backend_development
+  # username: your_pg_username
+  # password: your_pg_password
+  # host: localhost
+  # port: 5432
+
+test:
+  <<: *default
+  database: package_delivery_backend_test
+
+production:
+  <<: *default
+  database: package_delivery_backend_production
+  username: package_delivery_backend
+  password: <%= ENV["PACKAGE_DELIVERY_BACKEND_DATABASE_PASSWORD"] %>
