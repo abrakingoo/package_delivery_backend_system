@@ -1,9 +1,5 @@
 class Auth::RegistrationsController < ApplicationController
     def create
-        if params[:password] != params[:password_confirmation]
-            render json: { error: "Password and password confirmation don't match" }
-        end
-
         role = params.dig(:user, :role) || "client"
         result = RegistrationService.call(user_params, role)
 

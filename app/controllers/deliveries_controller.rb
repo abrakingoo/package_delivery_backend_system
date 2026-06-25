@@ -10,7 +10,7 @@ class DeliveriesController < ApplicationController
   end
 
   def show
-    return render json: { error: "Forbidden" }, status: :forbidden unless @delivery.user_id == @current_user.id
+    return render json: { error: "Forbidden" }, status: :forbidden unless @delivery.user_id == @current_user.id || @delivery.driver_id == @current_user.id
 
     render json: {
       id: @delivery.id,
