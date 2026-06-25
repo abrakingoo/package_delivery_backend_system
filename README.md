@@ -73,6 +73,17 @@ All protected endpoints require token sent in the header:
 Authorization: Bearer <token>
 ```
 
+### Rate Limiting
+
+The following limits are enforced per IP via `rack-attack`. Exceeding them returns `429 Too Many Requests`.
+
+| Endpoint | Limit |
+|----------|-------|
+| `POST /auth/login` | 5 requests / minute (also by email) |
+| `POST /auth/register` | 10 requests / hour |
+| `POST /delivery_request` | 10 requests / minute |
+| `PATCH /driver/location` | 60 requests / minute |
+
 ### Authentication
 
 | Method | Endpoint | Description | Auth |
@@ -102,7 +113,6 @@ POST /auth/register
     "name": "James Mwangi",
     "email": "james@driver.com",
     "phone": "0712345601",
-    "available": true,
     "password": "password123",
     "password_confirmation": "password123",
     "role": "driver"
@@ -199,7 +209,7 @@ PATCH /deliveries/:id/status
 Status transitions follow a strict order:
 
 ```
-pending → assigned → accepted → picked_up → in_transit → delivered
+requested → assigned → accepted → picked_up → in_transit → delivered
 ```
 
 Any attempt to skip a step will return a `422 Unprocessable Entity`.
@@ -213,13 +223,11 @@ The application follows a service object pattern — controllers are kept thin a
 ```
 app/
 ├── controllers/        # Thin controllers, handle HTTP in/out only
-├── jobs/
-│   └── GeocodeAndAssignDriverJob     # Async geocoding and driver assignment
 ├── services/           # Business logic
 │   ├── AuthenticationService         # JWT login
 │   ├── RegistrationService           # User/Driver registration
-│   ├── DeliveryRequestService        # Create delivery + enqueue background job
-│   ├── NearestDriverAssignmentService # Find and notify nearby drivers
+│   ├── DeliveryRequestService        # Create delivery, geocode addresses, assign drivers
+│   ├── NearestDriverAssignmentService # Find nearby drivers and create DriverRequests
 │   ├── DriverRequestResponseService  # Accept/reject driver requests
 │   ├── DeliveryStatusUpdateService   # Enforce lifecycle transitions
 │   ├── DriverLocationService         # Update driver GPS
@@ -237,20 +245,21 @@ app/
 
 **Key flows:**
 
-1. User creates delivery → `DeliveryRequestService` persists the record and immediately returns it → `GeocodeAndAssignDriverJob` runs in the background to geocode addresses and find nearby drivers
-2. Driver accepts via `DriverRequestResponseService` → delivery marked `assigned`, other pending requests deleted, driver marked unavailable
+1. User creates delivery → `DeliveryRequestService` geocodes addresses, persists the record, finds nearby available drivers via `NearestDriverAssignmentService`, and creates a `DriverRequest` for each
+2. Driver accepts via `DriverRequestResponseService` → delivery marked `assigned`, all other pending driver requests rejected, driver marked unavailable
 3. Driver advances status via `DeliveryStatusUpdateService` → transition validated, `DeliveryEvent` logged, driver marked available on delivery
 
 ---
 
 ## Assumptions
 
-- **Background jobs** — geocoding and driver assignment run asynchronously via `GeocodeAndAssignDriverJob`. Rails uses the async adapter by default (in-process threads). In production, swap to Sidekiq or GoodJob with Redis for reliability.
+- **Geocoding and driver assignment** — run synchronously within the delivery request creation flow. In production, consider moving this to a background job (Sidekiq or GoodJob) to avoid slow response times.
 - **No push notifications** — in production, drivers would be notified via push/websocket when a `DriverRequest` is created. Currently simulated by polling or direct API calls.
-- **Single driver per delivery** — the first driver to accept wins; all other pending requests are deleted.
+- **Single driver per delivery** — the first driver to accept wins; all other pending requests are rejected.
 - **Geocoding via Nominatim** — the free OpenStreetMap geocoder is used. In production, consider Google Maps or a paid provider for reliability.
 - **JWT authentication** — tokens expire after 24 hours. No refresh token mechanism is implemented.
 - **Idempotency keys** — required on delivery creation to prevent duplicate requests from retries.
-- **Driver availability** — automatically set to `false` on acceptance and back to `true` on delivery completion.
+- **Driver availability** — defaults to `true` on registration, set to `false` on delivery acceptance, and back to `true` on delivery completion.
+- **Rate limiting** — enforced via `rack-attack` on auth and delivery endpoints. Uses Rails cache store (in-memory). In production, swap to Redis for multi-server support.
 - **No admin role** — there is no admin interface or admin-specific endpoints at this stage.
 - **Status transitions are linear** — no support for cancellations or reversals in the current implementation.
