@@ -51,6 +51,11 @@ rails server
 
 The API will be available at `http://localhost:3000`.
 
+> This is an API-only application — there is no browser interface. Use a REST client to interact with the endpoints:
+> - [Postman](https://www.postman.com)
+> - [Insomnia](https://insomnia.rest)
+> - [curl](https://curl.se)
+
 ---
 
 ## Running Tests
