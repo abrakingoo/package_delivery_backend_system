@@ -1,7 +1,7 @@
 class NearestDriverAssignmentService
     def self.call(delivery_request, location)
         nearby_driver_ids = DriverLocation.near(
-            [location[:latitude], location[:longitude]], 10, order: false
+            [ location[:latitude], location[:longitude] ], 10, order: false
         ).pluck(:driver_id)
 
         drivers = Driver.where(available: true, id: nearby_driver_ids).limit(10)
