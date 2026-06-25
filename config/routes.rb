@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   # root "home#index"
 
   post :delivery_request, to: "delivery_request#create"
-  patch "driver/location", to: "driver_location#update"
+  patch "driver/location", to: "driver_location#update", as: :driver_location
   patch "driver/requests/:id/respond", to: "driver_requests#respond", as: :driver_requests_respond
   get   "deliveries",            to: "deliveries#index",         as: :deliveries
   get   "deliveries/:id",        to: "deliveries#show",          as: :delivery
