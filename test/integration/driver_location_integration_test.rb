@@ -1,6 +1,6 @@
 require "test_helper"
 
-class DriverLocationTest < ActionDispatch::IntegrationTest
+class DriverLocationIntegrationTest < ActionDispatch::IntegrationTest
   setup do
     @driver = drivers(:james)
     @token = JwtService.encode(user_id: @driver.id, role: "driver")
