@@ -78,7 +78,7 @@ class StatusUpdateTest < ActionDispatch::IntegrationTest
 
     get delivery_path(@delivery.id), headers: { "Authorization" => "Bearer #{other_user_token}" }, as: :json
 
-    assert_response :forbidden
+    assert_response :not_found
   end
 
   test "returns 404 for non-existent delivery" do
